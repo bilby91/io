@@ -1,0 +1,16 @@
+---
+layout: page
+title: Projects
+subtitle: Some of the open source projects I am actively maintaining.
+sitemap:
+  priority: 0.9
+---
+<ul>
+  {% for project in site.projects %}
+  <li>
+    <div class="github-card" data-github="{{ project }}" data-width="800" data-theme="medium"></div>
+  </li>
+  {% endfor %}
+</ul>
+
+<script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
