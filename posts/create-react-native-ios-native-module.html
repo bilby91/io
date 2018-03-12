@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> How to create a React Native iOS Native Module —  &raquo;  bilby91</title>
+<meta name="description" content="Learn how to create and distribute and iOS React Native Package from scratch">
+<meta name="keywords" content="">
+<link rel="canonical" href="https://io.bilby91.com/posts/create-react-native-ios-native-module">
+        
+
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="How to create a React Native iOS Native Module" />
+<meta name="twitter:description" content="Learn how to create and distribute and iOS React Native Package from scratch" />
+<meta name="twitter:image" content="https://io.bilby91.com" />
+
+<!-- Google plus -->
+<meta name="author" content="">
+<link rel="author" href="">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to create a React Native iOS Native Module">
+<meta property="og:description" content="Learn how to create and distribute and iOS React Native Package from scratch">
+<meta property="og:url" content="https://io.bilby91.com/posts/create-react-native-ios-native-module">
+<meta property="og:site_name" content="bilby91">
+
+        <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/css/main.css">
+
+  <link rel="stylesheet" href="/assets/vendor/highlight/styles/solarized_dark.css">
+
+<link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.css">
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <header class="header">
+    <div class="navigation">
+        <a href="/" class="logo">bilby91</a>
+        <ul class="menu">
+            <li class="menu__entry"><a href="/projects">Projects</a></li>
+        </ul>
+   </div>
+
+    <ul class="social-links">
+        
+            <a href="https://github.com/bilby91" class="social-links__entry" target="_blank">
+                <i class="fa fa-github"></i>
+            </a>
+        
+
+        
+            <a href="https://linkedin.com/in/bilby91" class="social-links__entry" target="_blank">
+                <i class="fa fa-linkedin"></i>
+            </a>
+        
+
+        
+            <a href="https://twitter.com/bilby91" class="social-links__entry" target="_blank">
+                <i class="fa fa-twitter"></i>
+            </a>
+        
+    </ul>
+</header>
+
+            <h1 class="page-title post-title">
+    <div class="page-title__text post-title__text">How to create a React Native iOS Native Module</div>
+    <div class="page-title__subtitle post-title__subtitle"></div>
+</h1>
+
+<div class="content">
+    <p>A few weeks ago I decided to help <a href="https://twitter.com/gastoon___">@gastoon___</a> with the refactor and packaging of a react-native library he had created, <a href="https://github.com/blackuy/react-native-twilio-video-webrtc">react-native-twilio-video-webrtc</a>. Before working with the library, @gastoon___ and I worked on a previous project that involved the development of a cross platform application in React, using <a href="https://facebook.github.io/react-native/">React Native</a> for the mobile applications. I never had the opportunity before to actually go through the process of packaging a React Native library that involved native components so it was a nice challenge.</p>
+
+<p>I’m going to explain two different “techniques” on how to approach the distribution and installation of the code. I will assume that you are familiar with the basics of iOS development and <code>cocoapods</code> as a package manager.</p>
+
+<h1 id="library-structure">Library Structure</h1>
+
+<p>For a react-native package you will probably structure your code in three different folders, src/lib (js files), ios and android. We are only going to focus on the two first folders.</p>
+
+<p>Our src folder will have our javascript files, this is the code that is going to be required by the react-native application that is using the library. Then we have our ios folder, in that folder our objective-c/swift files are going to sitting. One important thing to understand is that our node package will be holding our js code and the native code as well. This is very handy for users since they don’t need to download the code with a different tool, they have all the required code to run the library inside the <code>node_modules/mylib</code> folder.</p>
+
+<p>Let’s see the different ways of installing the native library on the client application now.</p>
+
+<h2 id="manual">Manual</h2>
+
+<p>If you are creating a library without external dependencies on the native side beside the iOS Framemworks, the manual way is good enough probably. This installation process will let the user install the library by just doing <code>react-native link your-library</code> after they have installed the node package. The downside IMO of the manual installation is that if you have an external dependency it will be complicated for the user to add it since the installation will need to include new steps that people not used to iOS development can find confusing.</p>
+
+<p>What we need to do in order to enable the link is create an xcodeproj for our native library in the <code>ios</code> folder. We do that by going to Xcode and creating a new <code>Cocoa Touch Static library</code> project. Once we have our project created we only need to add the files that are relevant to the ios native library.</p>
+
+<p>By doing that we enable users to install our native code like this:</p>
+
+<pre><code class="language-shell">npm install --save your-library
+react-native link your-library
+</code></pre>
+
+<h2 id="cocoapods">Cocoapods</h2>
+
+<p>If the native library depends on other obj-c/swift libraries it is a good idea to provide a podspec file that describes the library and its dependencies. This is the podspec for the <code>react-native-twilio-video-webrtc</code> project.</p>
+
+<pre><code class="language-ruby">require 'json'
+
+package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
+
+Pod::Spec.new do |s|
+  s.name           = 'react-native-twilio-video-webrtc'
+  s.version        = package['version']
+  s.summary        = package['description']
+  s.description    = package['description']
+  s.license        = package['license']
+  s.author         = package['author']
+  s.homepage       = package['homepage']
+  s.source         = { git: 'https://github.com/blackuy/react-native-twilio-video-web-rtc', tag: s.version }
+
+  s.requires_arc   = true
+  s.platform       = :ios, '8.0'
+
+  s.preserve_paths = 'LICENSE', 'README.md', 'package.json', 'index.js'
+  s.source_files   = 'ios/*.{h,m}'
+
+  s.dependency 'React'
+  s.dependency 'TwilioVideo', '&gt;= 1.0.1'
+end
+</code></pre>
+
+<p>As you can see we are specifying the source files of the native code (<code>'ios/*.{h,m}'</code>) and what external dependencies are required on runtime, in this case, <code>React</code> and <code>TwilioVideo</code>.</p>
+
+<p>Now we need to create a <code>Podfile</code> in the application’s ios folder. This file will describe the dependencies that our iOS application has.</p>
+
+<p>Here you can see the Podfile of the Example app (Example/ios/Podfile)[https://github.com/blackuy/react-native-twilio-video-webrtc/blob/master/Example/ios/Podfile] inside <code>react-native-twilio-video-webrtc</code>.</p>
+
+<pre><code class="language-ruby"># Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '9.0'
+
+target 'Example' do
+  pod 'Yoga', path: '../node_modules/react-native/ReactCommon/yoga/Yoga.podspec'
+  pod 'React', path: '../node_modules/react-native'
+  pod 'react-native-twilio-video-webrtc', path: '../../'
+end
+</code></pre>
+
+<p>Two important things to notice here. We are specifying the <code>React</code> and <code>Yoga</code> (required by react-native) as local (filesystem) dependencies. This is done this way since react-native started shipping the native code in the node package. Second, we are doing the exact same thing for our own library (remember we said that our native and js code will be shipped inside our node package ?). We are not pointing to the node_modules folders in this case because the project already hosts the files.</p>
+
+<p>Now that we have everything setuped we can install our code:</p>
+
+<pre><code class="language-shell">npm install --save your-library
+cd ios
+pod install
+</code></pre>
+
+<p>Don’t forget to start using the xcodeworkspace that cocoapods created instead of using the xcodeproj. If you are not familiar with this please check the cocoapods documentation.</p>
+
+<h2 id="carthage-">Carthage ?</h2>
+
+<p>Probably their are other ways of installing native dependencies using Carthage (never use it in native iOS dev). If anyone has tried this before please let me know!</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>I hope this can be useful for anyone trying to package a react-native library that uses native ios code. Any suggestions or different ways to tackle the problem please let me know!</p>
+
+<p>Enjoy 🎉</p>
+
+</div>
+
+<div class="about">
+    <div class="about__devider">*****</div>
+    <div class="about__text">
+        Written by <strong>  Martín Fernández </strong>
+        on <strong>19 June 2017</strong>
+    </div>
+</div>
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'blog-io';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+        </div>
+
+        <script src="/assets/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+        
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-86658376-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+    </body>
+</html>

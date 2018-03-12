@@ -1,56 +1,255 @@
----
-layout: null
-sitemap:
-  exclude: 'yes'
----
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  {% for post in site.posts %}
-    {% unless post.published == false %}
+  
+    
     <url>
-      <loc>{{ site.url }}{{ post.url }}/</loc>
-      {% if post.sitemap.lastmod %}
-        <lastmod>{{ post.sitemap.lastmod | date: "%Y-%m-%d" }}</lastmod>
-      {% elsif post.date %}
-        <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
-      {% else %}
-        <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
-      {% endif %}
-      {% if post.sitemap.changefreq %}
-        <changefreq>{{ post.sitemap.changefreq }}</changefreq>
-      {% else %}
+      <loc>https://io.bilby91.com/posts/opensource-contributuions-at-suttna/</loc>
+      
+        <lastmod>2018-03-12T00:00:00-03:00</lastmod>
+      
+      
         <changefreq>monthly</changefreq>
-      {% endif %}
-      {% if post.sitemap.priority %}
-        <priority>{{ post.sitemap.priority }}</priority>
-      {% else %}
+      
+      
         <priority>0.7</priority>
-      {% endif %}
+      
     </url>
-    {% endunless %}
-  {% endfor %}
-  {% for page in site.pages %}
-    {% unless page.sitemap.exclude == "yes" %}
+    
+  
+    
     <url>
-      <loc>{{ site.url }}{{ page.url | remove: "index.html" }}</loc>
-      {% if page.sitemap.lastmod %}
-        <lastmod>{{ page.sitemap.lastmod | date: "%Y-%m-%d" }}</lastmod>
-      {% elsif page.date %}
-        <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
-      {% else %}
-        <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
-      {% endif %}
-      {% if page.sitemap.changefreq %}
-        <changefreq>{{ page.sitemap.changefreq }}</changefreq>
-      {% else %}
+      <loc>https://io.bilby91.com/posts/sdev-sh/</loc>
+      
+        <lastmod>2018-02-28T00:00:00-03:00</lastmod>
+      
+      
         <changefreq>monthly</changefreq>
-      {% endif %}
-      {% if page.sitemap.priority %}
-        <priority>{{ page.sitemap.priority }}</priority>
-      {% else %}
-        <priority>0.5</priority>
-      {% endif %}
+      
+      
+        <priority>0.7</priority>
+      
     </url>
-    {% endunless %}
-  {% endfor %}
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/posts/create-react-native-ios-native-module/</loc>
+      
+        <lastmod>2017-06-19T00:00:00-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/posts/rails-to-hanami/</loc>
+      
+        <lastmod>2016-12-25T00:00:00-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/posts/hello-world/</loc>
+      
+        <lastmod>2016-11-01T00:00:00-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+  
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/automation</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/hanami</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.9</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/ios</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/node</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/open-source</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/projects</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.9</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/rails</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/react-native</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/react</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+  
+    
+  
+    
+    <url>
+      <loc>https://io.bilby91.com/categories/typescript</loc>
+      
+        <lastmod>2018-03-12T03:45:18-03:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
 </urlset>

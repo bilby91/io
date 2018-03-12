@@ -1,32 +1,635 @@
----
-layout: null
-sitemap:
-  exclude: 'yes'
----
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>{{ site.title | xml_escape }}</title>
-    <description>{{ site.description | xml_escape }}</description>
-    <link>{{ site.url }}{{ site.baseurl }}/</link>
-    <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
-    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
-    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
-    <generator>Jekyll v{{ jekyll.version }}</generator>
-    {% for post in site.posts limit:10 %}
+    <title>bilby91</title>
+    <description>Inputs and Outputs of my personal experience working with different software technologies. Enjoy it!</description>
+    <link>https://io.bilby91.com/</link>
+    <atom:link href="https://io.bilby91.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 12 Mar 2018 03:45:18 -0300</pubDate>
+    <lastBuildDate>Mon, 12 Mar 2018 03:45:18 -0300</lastBuildDate>
+    <generator>Jekyll v3.7.3</generator>
+    
       <item>
-        <title>{{ post.title | xml_escape }}</title>
-        <description>{{ post.content | xml_escape }}</description>
-        <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
-        <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
-        <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
-        {% for tag in post.tags %}
-        <category>{{ tag | xml_escape }}</category>
-        {% endfor %}
-        {% for cat in post.categories %}
-        <category>{{ cat | xml_escape }}</category>
-        {% endfor %}
+        <title>Open Source contributions at Suttna</title>
+        <description>&lt;p&gt;Ten months ago we started a new project with &lt;a href=&quot;https://github.com/santiagodoldan&quot;&gt;@santiago.doldan&lt;/a&gt;, we called it &lt;a href=&quot;https://suttna.com&quot;&gt;Suttna&lt;/a&gt;. The idea was to build a bot capable of scheduling standups in multiple chat clients. This side project turned out to be a real business and quite a few users started using it 😊&lt;/p&gt;
+
+&lt;p&gt;In order to build a cross platform bot, we needed a piece of technology that would abstract the communication layer between the different chat providers. Similarly, we needed a common set of constructs that would allow us to define user conversations. We found Microsoft’s BotBuilder framework to be a really good option. It solved both problems by decoupleing networking communication with chat providers using &lt;code&gt;Connectors&lt;/code&gt; and modeling user conversations using a very powerfull &lt;code&gt;Dialogs&lt;/code&gt; API.&lt;/p&gt;
+
+&lt;p&gt;We did some initial testing around the framework and decided to give it a try!&lt;/p&gt;
+
+&lt;p&gt;During our journey developing &lt;a href=&quot;https://suttna.com&quot;&gt;Suttna&lt;/a&gt;, we have built multiple libraries to solve different problems in the BotBuilder ecosystem.&lt;/p&gt;
+
+&lt;p&gt;This are some of the libraries we have developed and open sourced this far.&lt;/p&gt;
+
+&lt;p&gt;Some clarifications:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Botbuilder -&amp;gt; Microsoft open source botbuilder framework for node.js and C#&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;BotFramework -&amp;gt; The Microsoft Bot Framework provides just what you need to build and connect intelligent bots that interact naturally wherever your users are talking, from text/SMS to Skype, Slack, Office 365 mail and other popular services&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;botbuilder-slack&quot;&gt;&lt;a href=&quot;https://github.com/suttna/botbuilder-slack&quot;&gt;botbuilder-slack&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;We found multiple issues while using BotFramework’s channels.&lt;/p&gt;
+
+&lt;p&gt;Most important issue is that you don’t “own” the OAuth process. BotFramework handles OAuth and then sends an event to your bot. Main issue with this setup is that information about the installer is not available in the event.&lt;/p&gt;
+
+&lt;p&gt;Missing events. Slack sent some interesting 
+events that we needed but BotFramework was not 
+forwarding (probably because they were using the RT 
+API in some cases). First solution for this problem was &lt;a href=&quot;https://github.com/suttna/botbuilder-slack-extension&quot;&gt;botbuilder-slack-extension&lt;/a&gt;. It basically added a new connector to listen and emit the missing events using Slack’s webhooks.&lt;/p&gt;
+
+&lt;p&gt;Commands. Another feature that we wanted to use but was not avaiable using Botbuilder were Slack commands.&lt;/p&gt;
+
+&lt;p&gt;To solve all this issues and some other stuff, we decided to build a custom Slack connector that was 100% compatible with Botbuilder’s ChatConnector. This would mean that we clould swap connectors without chaning any extra code and it should “just work”.&lt;/p&gt;
+
+&lt;p&gt;So far, Suttna has been running botbuilder-slack without any issues in production for more than 4 months.&lt;/p&gt;
+
+&lt;p&gt;Source available here https://github.com/suttna/botbuilder-slack&lt;/p&gt;
+
+&lt;h2 id=&quot;botbuilder-redis-storage&quot;&gt;&lt;a href=&quot;https://github.com/suttna/botbuilder-redis-storage&quot;&gt;botbuilder-redis-storage&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;When users communicate with Suttna using BotBuilder, user’s conversation state needs to be stored somewhere. BotBuilder provides an in-memory implementation that is fine for testing and maybe development as well but definitely not reliable for a production environment. We looked for alternatives and we couldn’t find one that solved our constraints. We decided to build a small storage library that saves conversation’s state in &lt;code&gt;redis&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This library implements BotBuilder’s &lt;code&gt;IBotStorage&lt;/code&gt; interface, plain and simple.&lt;/p&gt;
+
+&lt;p&gt;Source available here https://github.com/suttna/botbuilder-redis-storage&lt;/p&gt;
+
+&lt;h2 id=&quot;botbuilder-markdown&quot;&gt;&lt;a href=&quot;https://github.com/suttna/botbuilder-markdown&quot;&gt;botbuilder-markdown&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Botframework attemps to standarize the message’s format but we found multiple issues trying to maintain a set of translations that should work in Slack and Microsoft Teams. We had several issues with new lines and code formatting to name a few.&lt;/p&gt;
+
+&lt;p&gt;We decided to write a middleware that would translate valid markdown text into each platform’s markdown flavor.&lt;/p&gt;
+
+&lt;p&gt;At the moment the botbuilder-markdown supports Slack and Microsoft Teams.&lt;/p&gt;
+
+&lt;p&gt;Source available here https://github.com/suttna/botbuilder-redis-storage&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;It has been really interesting to work with Botbuilder so far. There is a new experimental version of Botbuilder being developed. Anyone interested in contributing with idea can follow the development here https://github.com/Microsoft/botbuilder-js.&lt;/p&gt;
+
+&lt;p&gt;Have you tried any of our libraries ? Do you find them useful ?&lt;/p&gt;
+
+&lt;p&gt;Wanna know you thoughts and any feedback!&lt;/p&gt;
+
+&lt;p&gt;Enjoy 🎉&lt;/p&gt;
+</description>
+        <pubDate>Mon, 12 Mar 2018 00:00:00 -0300</pubDate>
+        <link>https://io.bilby91.com/posts/opensource-contributuions-at-suttna</link>
+        <guid isPermaLink="true">https://io.bilby91.com/posts/opensource-contributuions-at-suttna</guid>
+        
+        
+        <category>open-source</category>
+        
+        <category>node</category>
+        
+        <category>typescript</category>
+        
       </item>
-    {% endfor %}
+    
+      <item>
+        <title>sdev.sh</title>
+        <description>&lt;p&gt;I’ve been setting up most of my development environments in the last 3 years using &lt;a href=&quot;https://docs.docker.com/&quot;&gt;docker&lt;/a&gt; and &lt;a href=&quot;https://docs.docker.com/compose/&quot;&gt;docker-compose&lt;/a&gt; without any &lt;a href=&quot;https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076/40&quot;&gt;important&lt;/a&gt; issues. Having said that, in the last couple of month I’ve repeating the following script (with some variations cases by case) in most of my projects.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;#!/bin/bash
+
+case &quot;$1&quot; in
+  server)
+    docker-compose -f docker/docker-compose.yml run --rm -p 8080:8080 yarn start
+    ;;
+  build)
+    docker-compose -f docker/docker-compose.yml run --rm app yarn build
+    ;;
+  test)
+    docker-compose -f docker/docker-compose.yml run --rm app yarn test
+    ;;
+  bash)
+    docker-compose -f docker/docker-compose.yml run --rm -p 8080:8080 server /bin/bash
+    ;;
+esac
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I always ended up writing a call to &lt;code&gt;docker-compose&lt;/code&gt; depending on the task I need to perform with some flag or arguments variations.&lt;/p&gt;
+
+&lt;p&gt;At the same time, I’ve spend some time working on different projects that had multiple ways of running it and lacked a simple documentation on what tasks were available inside the project.&lt;/p&gt;
+
+&lt;p&gt;I realized that this small script that I duplicated in most of my applications could be better expressed in a declarative fashion using a yaml file.&lt;/p&gt;
+
+&lt;h2 id=&quot;hi-sdevsh&quot;&gt;Hi &lt;a href=&quot;https://github.com/bilby91/sdev.sh&quot;&gt;sdev.sh&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/bilby91/sdev.sh&quot;&gt;sdev.sh&lt;/a&gt; purpose is simple, Simple declarative syntax for your projects tasks.&lt;/p&gt;
+
+&lt;p&gt;Previous bash script is now expressed as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-yaml&quot;&gt;version: 1
+name: My Cool App
+description: This text should briefly mention what the application/library is about
+docker:
+  compose_file: docker/docker-compose.yml
+tasks:
+  - name: server
+    description: Start the development server
+    command: yarn start
+    container: app
+    rm: true
+    ports:
+      &quot;8080:8080&quot;
+
+  - name: build
+    description: This command will build the entire application and install dependencies
+    command: yarn build
+    container: app
+    rm: true
+
+  - name: test
+    description: run unit test suite.
+    command: yarn test
+    container: app
+
+  - name: bash
+    description: ssh in docker container
+    command: /bin/bash
+    container: app
+    ports:
+      &quot;8080:8080&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using that yaml file as input, sdev will generate the following command for you.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;➜  sdev.sh git:(improve-readme) ✗ sdev
+
+  Usage: sdev [options] [command]
+
+  This text should briefly mention what the application/library is about
+
+
+  Options:
+
+    -V, --version  output the version number
+    -h, --help     output usage information
+
+
+  Commands:
+
+    build       This command will build the entire application and install dependencies
+    test        run unit test suite.
+    bash        ssh in docker container
+    help [cmd]  display help for [cmd]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code is open source and can be found &lt;a href=&quot;https://github.com/bilby91/sdev.sh&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I’m looking for more cool features that could be built in sdev.sh. If you think this tool might be useful in your projects, I want to hear about it :). Ping me at fmartin91@gmail.com&lt;/p&gt;
+
+&lt;p&gt;Enjoy 🎉&lt;/p&gt;
+</description>
+        <pubDate>Wed, 28 Feb 2018 00:00:00 -0300</pubDate>
+        <link>https://io.bilby91.com/posts/sdev-sh</link>
+        <guid isPermaLink="true">https://io.bilby91.com/posts/sdev-sh</guid>
+        
+        
+        <category>node</category>
+        
+        <category>automation</category>
+        
+      </item>
+    
+      <item>
+        <title>How to create a React Native iOS Native Module</title>
+        <description>&lt;p&gt;A few weeks ago I decided to help &lt;a href=&quot;https://twitter.com/gastoon___&quot;&gt;@gastoon___&lt;/a&gt; with the refactor and packaging of a react-native library he had created, &lt;a href=&quot;https://github.com/blackuy/react-native-twilio-video-webrtc&quot;&gt;react-native-twilio-video-webrtc&lt;/a&gt;. Before working with the library, @gastoon___ and I worked on a previous project that involved the development of a cross platform application in React, using &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;React Native&lt;/a&gt; for the mobile applications. I never had the opportunity before to actually go through the process of packaging a React Native library that involved native components so it was a nice challenge.&lt;/p&gt;
+
+&lt;p&gt;I’m going to explain two different “techniques” on how to approach the distribution and installation of the code. I will assume that you are familiar with the basics of iOS development and &lt;code&gt;cocoapods&lt;/code&gt; as a package manager.&lt;/p&gt;
+
+&lt;h1 id=&quot;library-structure&quot;&gt;Library Structure&lt;/h1&gt;
+
+&lt;p&gt;For a react-native package you will probably structure your code in three different folders, src/lib (js files), ios and android. We are only going to focus on the two first folders.&lt;/p&gt;
+
+&lt;p&gt;Our src folder will have our javascript files, this is the code that is going to be required by the react-native application that is using the library. Then we have our ios folder, in that folder our objective-c/swift files are going to sitting. One important thing to understand is that our node package will be holding our js code and the native code as well. This is very handy for users since they don’t need to download the code with a different tool, they have all the required code to run the library inside the &lt;code&gt;node_modules/mylib&lt;/code&gt; folder.&lt;/p&gt;
+
+&lt;p&gt;Let’s see the different ways of installing the native library on the client application now.&lt;/p&gt;
+
+&lt;h2 id=&quot;manual&quot;&gt;Manual&lt;/h2&gt;
+
+&lt;p&gt;If you are creating a library without external dependencies on the native side beside the iOS Framemworks, the manual way is good enough probably. This installation process will let the user install the library by just doing &lt;code&gt;react-native link your-library&lt;/code&gt; after they have installed the node package. The downside IMO of the manual installation is that if you have an external dependency it will be complicated for the user to add it since the installation will need to include new steps that people not used to iOS development can find confusing.&lt;/p&gt;
+
+&lt;p&gt;What we need to do in order to enable the link is create an xcodeproj for our native library in the &lt;code&gt;ios&lt;/code&gt; folder. We do that by going to Xcode and creating a new &lt;code&gt;Cocoa Touch Static library&lt;/code&gt; project. Once we have our project created we only need to add the files that are relevant to the ios native library.&lt;/p&gt;
+
+&lt;p&gt;By doing that we enable users to install our native code like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;npm install --save your-library
+react-native link your-library
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;cocoapods&quot;&gt;Cocoapods&lt;/h2&gt;
+
+&lt;p&gt;If the native library depends on other obj-c/swift libraries it is a good idea to provide a podspec file that describes the library and its dependencies. This is the podspec for the &lt;code&gt;react-native-twilio-video-webrtc&lt;/code&gt; project.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;require 'json'
+
+package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
+
+Pod::Spec.new do |s|
+  s.name           = 'react-native-twilio-video-webrtc'
+  s.version        = package['version']
+  s.summary        = package['description']
+  s.description    = package['description']
+  s.license        = package['license']
+  s.author         = package['author']
+  s.homepage       = package['homepage']
+  s.source         = { git: 'https://github.com/blackuy/react-native-twilio-video-web-rtc', tag: s.version }
+
+  s.requires_arc   = true
+  s.platform       = :ios, '8.0'
+
+  s.preserve_paths = 'LICENSE', 'README.md', 'package.json', 'index.js'
+  s.source_files   = 'ios/*.{h,m}'
+
+  s.dependency 'React'
+  s.dependency 'TwilioVideo', '&amp;gt;= 1.0.1'
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see we are specifying the source files of the native code (&lt;code&gt;'ios/*.{h,m}'&lt;/code&gt;) and what external dependencies are required on runtime, in this case, &lt;code&gt;React&lt;/code&gt; and &lt;code&gt;TwilioVideo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now we need to create a &lt;code&gt;Podfile&lt;/code&gt; in the application’s ios folder. This file will describe the dependencies that our iOS application has.&lt;/p&gt;
+
+&lt;p&gt;Here you can see the Podfile of the Example app (Example/ios/Podfile)[https://github.com/blackuy/react-native-twilio-video-webrtc/blob/master/Example/ios/Podfile] inside &lt;code&gt;react-native-twilio-video-webrtc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;# Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '9.0'
+
+target 'Example' do
+  pod 'Yoga', path: '../node_modules/react-native/ReactCommon/yoga/Yoga.podspec'
+  pod 'React', path: '../node_modules/react-native'
+  pod 'react-native-twilio-video-webrtc', path: '../../'
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Two important things to notice here. We are specifying the &lt;code&gt;React&lt;/code&gt; and &lt;code&gt;Yoga&lt;/code&gt; (required by react-native) as local (filesystem) dependencies. This is done this way since react-native started shipping the native code in the node package. Second, we are doing the exact same thing for our own library (remember we said that our native and js code will be shipped inside our node package ?). We are not pointing to the node_modules folders in this case because the project already hosts the files.&lt;/p&gt;
+
+&lt;p&gt;Now that we have everything setuped we can install our code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;npm install --save your-library
+cd ios
+pod install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Don’t forget to start using the xcodeworkspace that cocoapods created instead of using the xcodeproj. If you are not familiar with this please check the cocoapods documentation.&lt;/p&gt;
+
+&lt;h2 id=&quot;carthage-&quot;&gt;Carthage ?&lt;/h2&gt;
+
+&lt;p&gt;Probably their are other ways of installing native dependencies using Carthage (never use it in native iOS dev). If anyone has tried this before please let me know!&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;I hope this can be useful for anyone trying to package a react-native library that uses native ios code. Any suggestions or different ways to tackle the problem please let me know!&lt;/p&gt;
+
+&lt;p&gt;Enjoy 🎉&lt;/p&gt;
+</description>
+        <pubDate>Mon, 19 Jun 2017 00:00:00 -0300</pubDate>
+        <link>https://io.bilby91.com/posts/create-react-native-ios-native-module</link>
+        <guid isPermaLink="true">https://io.bilby91.com/posts/create-react-native-ios-native-module</guid>
+        
+        
+        <category>react-native</category>
+        
+        <category>react</category>
+        
+        <category>ios</category>
+        
+      </item>
+    
+      <item>
+        <title>Rails to Hanami</title>
+        <description>&lt;p&gt;A couple of month ago I discovered a small community of ruby developers that where building a new web
+framework, &lt;a href=&quot;http://hanamirb.org&quot;&gt;Hanami&lt;/a&gt;. Since then, I’ve been following pretty closely the progress of
+the project. In the last version, Hanami integrated with &lt;a href=&quot;http://rom-rb.org&quot;&gt;ROM&lt;/a&gt; in their data layer, so,
+I decided it was a good idea to play a little bit with it and create a simple REST API to see how it worked out.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-we-are-going-to-build-&quot;&gt;What we are going to build ?&lt;/h1&gt;
+
+&lt;p&gt;We are going to build a REST JSON API for a classic TODO application&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jsonapi.org/&quot;&gt;JSON API Standard&lt;/a&gt; for encoding of json.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.postgresql.org&quot;&gt;Postgresql&lt;/a&gt; for data storage.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;endpoints&quot;&gt;Endpoints&lt;/h2&gt;
+
+&lt;h3 id=&quot;lists&quot;&gt;Lists&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GET - Fetch list of lists (/lists)&lt;/li&gt;
+  &lt;li&gt;GET - Fetch list (/lists/:id)&lt;/li&gt;
+  &lt;li&gt;POST - Create list (/lists)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;tasks&quot;&gt;Tasks&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GET - Fetch tasks (/lists/:list_id/tasks)&lt;/li&gt;
+  &lt;li&gt;GET - Fetch task  (/lists/:list_id/tasks/:id)&lt;/li&gt;
+  &lt;li&gt;POST - Create task (/lists/:list_id/tasks)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;entities&quot;&gt;Entities&lt;/h2&gt;
+
+&lt;h2 id=&quot;list&quot;&gt;List&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;id (Integer)&lt;/li&gt;
+  &lt;li&gt;name (String)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;task&quot;&gt;Task&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;id (Integer)&lt;/li&gt;
+  &lt;li&gt;description (String)&lt;/li&gt;
+  &lt;li&gt;list_id (Integer)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;development&quot;&gt;Development&lt;/h1&gt;
+
+&lt;p&gt;Lets start by creating the project. Hanami comes with an initialization command just like rails.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;hanami new hanami_todo_app --database=postgres
+cd hanami_todo_app
+bundle install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After running the new command, Hanami should have created a new directory with the name &lt;code&gt;hanami_todo_app&lt;/code&gt;. We can &lt;code&gt;cd&lt;/code&gt; into the directory and take a look at the structure. The &lt;a href=&quot;http://hanamirb.org/guides/architecture/overview/&quot;&gt;architecture&lt;/a&gt; of Hanami applications it’s a little bit different than rails. The application is split in two main directories, lib and apps. In the lib directory most of your business logic will sit. This includes your entities (almost like a Rails model but without the persistence apis, more on this later), services, interactors or whatever code organization design you use for your application. Under the apps folder you will likely have only one folder in a simple app. We are going to have only one folder called &lt;code&gt;api&lt;/code&gt; that is were all our http actions will sit. If you have a big application you will likely have multiple folders under apps, for example, admin (administrative UI), web, etc. Rails has engines for splitting big application into different modular smaller apps.&lt;/p&gt;
+
+&lt;p&gt;By default Hanami will create a default app called &lt;code&gt;web&lt;/code&gt;, we are going to delete that application and create a new one called &lt;code&gt;api&lt;/code&gt; just to help my OCD.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;hanami destroy app web
+hanami generate app api
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After those command are executed we should have removed the &lt;code&gt;web&lt;/code&gt; folder under &lt;code&gt;apps&lt;/code&gt; and a new &lt;code&gt;api&lt;/code&gt; folder should have been created.&lt;/p&gt;
+
+&lt;h2 id=&quot;entities-and-repositories-models&quot;&gt;Entities and Repositories (Models)&lt;/h2&gt;
+
+&lt;p&gt;We are going to start modeling our system now. Two simple entities should be enough, List and Task.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;➜  hanami_todo_app git:(master) ✗ hanami generate model list
+      create  lib/hanami_todo_app/entities/list.rb
+      create  lib/hanami_todo_app/repositories/list_repository.rb
+      create  db/migrations/20170531214217_create_lists.rb
+      create  spec/hanami_todo_app/entities/list_spec.rb
+      create  spec/hanami_todo_app/repositories/list_repository_spec.rb
+
+➜  hanami_todo_app git:(master) ✗ hanami generate model task
+      create  lib/hanami_todo_app/entities/task.rb
+      create  lib/hanami_todo_app/repositories/task_repository.rb
+      create  db/migrations/20170531214247_create_tasks.rb
+      create  spec/hanami_todo_app/entities/task_spec.rb
+      create  spec/hanami_todo_app/repositories/task_repository_spec.rb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see from the command’s output, Hanami created the entity but it also created a repository. We will discuss more on them later. Now we can go to the generated migration files and adapt them as we need.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;Hanami::Model.migration do
+  change do
+    create_table :lists do
+      primary_key :id
+      column :name, String, null: false
+
+      column :created_at, DateTime, null: false
+      column :updated_at, DateTime, null: false
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;Hanami::Model.migration do
+  change do
+    create_table :tasks do
+      primary_key :id
+      column :description, String, null: false
+      foreign_key :list_id, :lists, on_delete: :cascade, null: false
+
+      column :created_at, DateTime, null: false
+      column :updated_at, DateTime, null: false
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hanami’s migration DSL is very similar to the one ActiveRecord provides. We need to provide column name, data type and any constraint that we want for the column. In this cases we added nullability constraint to enforce non null columns. Hanami automatically generates accessors and setters for our entities based on the database schema, same as rails.&lt;/p&gt;
+
+&lt;p&gt;For running the migrations we can use &lt;code&gt;hanami db migrate&lt;/code&gt;, since we didn’t create the database yet we can run &lt;code&gt;hanami db prepare&lt;/code&gt; that will create and run migrations for us. For more database related tasks you can check them with &lt;code&gt;hanami db&lt;/code&gt;.&lt;/p&gt;
+
+&lt;!-- Let's try to create a new List using the Hanami console.  --&gt;
+
+&lt;p&gt;One important difference between Hanami and Rails regarding data modeling is that Hanami doesn’t provide an enormous api on the entities classes. Entities are very simple ruby classes that inherit from &lt;code&gt;Hanami::Entity&lt;/code&gt;. They don’t have api’s for querying, creating or updating database records, the responsibility for doing all those tasks is encapsulated in the entitiy associated Repository (remember we mentioned them ?).&lt;/p&gt;
+
+&lt;p&gt;This change will be of high impact on the design of your system. By splitting the persistence from the model you are not coupling your business logic with the underlying data store. Every Repository has it’s own independent data store, in our case the ListRepository and TaskRepository will be persisted in the postgres db.&lt;/p&gt;
+
+&lt;p&gt;Lets imagine that our application it’s getting a lot of traffic and we detected that our SQL db is the bottleneck. One possible solution to the problem could be to move the highly accessed data to a faster data store, for example, redis. Instead of refactoring all our code we can simple change our Repository to start using a different data store and we won’t need to actually touch our entity class. This is a super simple and naive example of how this can be useful by I hope you get the idea.&lt;/p&gt;
+
+&lt;p&gt;We are going to play with the &lt;code&gt;hanami console&lt;/code&gt; and create some objects using the repository.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;# Let create a new repository instance
+2.3.1 :011 &amp;gt; list_repository = ListRepository.new
+ =&amp;gt; #&amp;lt;ListRepository relations=[:lists]&amp;gt;
+
+# Create and store a new list object
+2.3.1 :012 &amp;gt; list_repository.create(name: 'Grocery')
+[hanami_todo_app] [INFO] [2017-05-31 19:08:39 -0300] (0.000608s) SELECT &quot;id&quot;, &quot;name&quot;, &quot;created_at&quot;, &quot;updated_at&quot; FROM &quot;lists&quot; LIMIT 1
+[hanami_todo_app] [INFO] [2017-05-31 19:08:39 -0300] (0.003811s) INSERT INTO &quot;lists&quot; (&quot;name&quot;, &quot;created_at&quot;, &quot;updated_at&quot;) VALUES ('Grocery', '2017-05-31 22:08:39.068319+0000', '2017-05-31 22:08:39.068319+0000') RETURNING *
+ =&amp;gt; #&amp;lt;List:0x007fa244403380 @attributes={:id=&amp;gt;1, :name=&amp;gt;&quot;Grocery&quot;, :created_at=&amp;gt;2017-05-31 22:08:39 UTC, :updated_at=&amp;gt;2017-05-31 22:08:39 UTC}&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://hanamirb.org/guides/models/repositories/&quot;&gt;Repositories&lt;/a&gt; provide the apis for interacting with the persistence layer. From the Hanami docs:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;An object that mediates between entities and the persistence layer. It offers a standardized API to query and execute commands on a database.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The methods you are used to call in your Rails models are now in the repository, so, instead of doing &lt;code&gt;User.create({ ... })&lt;/code&gt; you will do &lt;code&gt;UserRepository.new.create({ ... })&lt;/code&gt;. Same applies for &lt;code&gt;find&lt;/code&gt; and update, I suggest looking at the docs for a better understanding since apis are not exactly the same.&lt;/p&gt;
+
+&lt;p&gt;Repositories also encapsulate your custom queries. In Rails your probably created some scopes in the model to encapsulate your query logic. In Hanami you write methods in your repository. One big difference between Hanami and Rails in this case is that Hanami doesn’t expose a method to perform custom queries outside the Repository class. This is a really good idea because you will be forced to write all your query logic in one place instead of having your queries spread all along your codebase :).&lt;/p&gt;
+
+&lt;p&gt;This is how our ListRepository looks like.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;class ListRepository &amp;lt; Hanami::Repository
+  associations do
+    has_many :tasks
+  end
+
+  def with_name(name)
+    lists.where(name: name).as(List).to_a
+  end
+
+  def find_with_tasks(id)
+    aggregate(:tasks).where(id: id).as(List).one
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, we have &lt;code&gt;with_name&lt;/code&gt; that hides the logic of querying our datastore for a List with a given name.&lt;/p&gt;
+
+&lt;p&gt;The other important element that we define in the repository are the associations. This is the same concept that we have in &lt;code&gt;ActiveRecord&lt;/code&gt;, it defines how our different entities/models relate to each other. This association definitions will be helpful when we want to query data based on multiple tables. At the moment Hanami only supports &lt;code&gt;has_many&lt;/code&gt; associations but you can use the develop branch to get &lt;code&gt;belongs_to&lt;/code&gt; associations too. Associations are very powerful, they are powered by &lt;code&gt;ROM&lt;/code&gt;. At the moment the feature is experimental but I guess this is going to become stable as soon as more people start using Hanami.&lt;/p&gt;
+
+&lt;h2 id=&quot;actions-rails-controller-actions&quot;&gt;Actions (Rails controller actions)&lt;/h2&gt;
+
+&lt;p&gt;We can move to our final step to get our api working, the actions (same as controller’s methods in Rails).&lt;/p&gt;
+
+&lt;p&gt;Rails uses controllers to encapsulate the http requests handlers that your application has. Hanami decided to have one class per action instead of having a controller that groups the actions of a given resource.&lt;/p&gt;
+
+&lt;p&gt;Lets use the generators to create the action classes. We can do &lt;code&gt;hanami generate action api 'lists#index'&lt;/code&gt; to create the index action.&lt;/p&gt;
+
+&lt;p&gt;Generator will add the correct routes in your config/routes file so you don’t have to worry about that.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;module Api::Controllers::Lists
+  class Index
+    include Api::Action
+    include JSONAPI::Hanami::Action
+
+    def call(params)
+      self.data = list_repository.all
+      self.status = 200
+    end
+
+    def list_repository
+      @list_repository ||= ListRepository.new
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The important method here is &lt;code&gt;call&lt;/code&gt;. This method will be called when the route that is associated with this action is requested. By using the gem &lt;code&gt;gem 'jsonapi-hanami'&lt;/code&gt; (don’t forget to add it in your Gemfile) we can serialize our Lists into a valid jsonapi response. For more information on this nice gem take a look at &lt;a href=&quot;http://jsonapi-rb.org/guides/getting_started/hanami.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s look at a different action now, one that receives data from the client.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ruby&quot;&gt;module Api::Controllers::Lists
+  class Create
+    include Api::Action
+    include JSONAPI::Hanami::Action
+
+    deserializable_resource :list
+
+    params do
+      required(:list).schema do
+        required(:name)
+      end
+    end
+
+    def call(params)
+      self.data = list_repository.create(params[:list])
+      self.status = 200
+    end
+
+    def list_repository
+      @list_repository ||= ListRepository.new
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this actions we have some other elements to discuss. First, &lt;code&gt;deserializable_resource&lt;/code&gt; is telling the parser to parse the incoming payload looking for a &lt;code&gt;list&lt;/code&gt; element, this is needed to parse a jsonapi valid payload. The second important aspect is the validation we are performing on the params. As you can see we are calling a params class method using a special DSL to add constraints to our input data. This is powered by &lt;a href=&quot;https://github.com/dry-rb/dry-validation&quot;&gt;dry-validation&lt;/a&gt;. Take a look at the docs for more info on how to validate data, it’s a really powerful tool.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;We have seen a very basic overview of the different building blocks that Hanami offers in the post. There is &lt;a href=&quot;http://hanamirb.org/guides/&quot;&gt;A LOT&lt;/a&gt; more in Hanami that I encourage everyone to investigate, community is really awesome and people are very helpful, you can find them on &lt;a href=&quot;https://gitter.im/hanami/chat&quot;&gt;Gitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you want to take a look at the source code you can find it here &lt;a href=&quot;https://github.com/bilby91/hanami-todo-app&quot;&gt;bilby91/hanami-todo-app&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If you have any questions or want to explore different parts of Hanami please write a comment. Im just starting with the framework so looking into the different components of the project is something I will like to do.&lt;/p&gt;
+
+&lt;p&gt;Enjoy 🎉&lt;/p&gt;
+</description>
+        <pubDate>Sun, 25 Dec 2016 00:00:00 -0300</pubDate>
+        <link>https://io.bilby91.com/posts/rails-to-hanami</link>
+        <guid isPermaLink="true">https://io.bilby91.com/posts/rails-to-hanami</guid>
+        
+        
+        <category>hanami</category>
+        
+        <category>rails</category>
+        
+      </item>
+    
+      <item>
+        <title>Welcome to IO!</title>
+        <description>&lt;p&gt;This is my personal blog where I write about stuff I have worked/tried in software. I thought it
+would be a good idea to start explaining what technologies I use to power this blog.&lt;/p&gt;
+
+&lt;h2 id=&quot;blog-engine&quot;&gt;Blog Engine&lt;/h2&gt;
+
+&lt;p&gt;I use &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; to run the blog. Jekyll is a static site generator, it renders your pages based on different static files that you define in your repository. Pages can be written in multiple markups like Markdown, Liquid or HTML to name a few.&lt;/p&gt;
+
+&lt;p&gt;There is an awesome community around Jekyll, lots of static sites are powered by this small engine. Thanks to this community, tons of themes are available for free. This blog is based on a particular theme that I really liked, &lt;a href=&quot;https://github.com/nielsenramon/chalk&quot;&gt;Chalk&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;@nielsenramon has done a great job with his theme, it is really easy to setup and start writing! Here I will show the different steps I did in order to setup and deploy IO site with &lt;a href=&quot;https://pages.github.com/&quot;&gt;Github Pages&lt;/a&gt; (more on this later).&lt;/p&gt;
+
+&lt;p&gt;First we need to clone the original repository:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-zsh&quot; data-lang=&quot;zsh&quot;&gt;git clone github.com/nielsenramon/chalk io&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I removed the default data (posts, images) and update the favicon. I also deleted the circle.yml file, won’t be running CI for the moment. Now we can change the default configuration. The file &lt;code&gt;_config.yml&lt;/code&gt; contains the Jekyll mandatory settings and some custom settings for Chalk.&lt;/p&gt;
+
+&lt;p&gt;We are ready to start writing. I decided to write the posts in Markdown format, it is really easy to use and super powerful. My first post is the one you are reading :)&lt;/p&gt;
+
+&lt;p&gt;To preview your site locally you need to install all the dependencies. Chalk comes with a very handy setup
+script at &lt;code&gt;bin/setup&lt;/code&gt;. In order to run the script you will need to first install ruby and npm. I suggest
+installing ruby with &lt;a href=&quot;https://rvm.io/&quot;&gt;rvm&lt;/a&gt; and npm with &lt;a href=&quot;http://brew.sh/&quot;&gt;brew&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-zsh&quot; data-lang=&quot;zsh&quot;&gt;# Install rvm
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash
+
+# Install ruby
+rvm install ruby
+
+# Install brew
+/usr/bin/ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
+
+# Install node and npm
+brew install node&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now we can proceed and install the rest of the stuff by simply running:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-zsh&quot; data-lang=&quot;zsh&quot;&gt;bin/setup&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Done! We can now start the Jekyll server with this command:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-zsh&quot; data-lang=&quot;zsh&quot;&gt;bundle exec jekyll serve&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;deploy&quot;&gt;Deploy&lt;/h2&gt;
+
+&lt;p&gt;We are now ready to deploy our static blog. Github provides a very convenient tool for hosting static sites
+powered by Jekyll, Github Pages (gh-pages). It is really easy to deploy a site with gh-pages, you just need to push your code into a Github repository and setup some minimal configurations (settings tab) on the repository.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/2016-11-01-hello-world/gh-pages-settings-5aa7803ec0fe022adb3f553e0af28ecbaa1517ae437bdcc7d16dbfabf9cc18f9.png&quot; class=&quot;fluidbox-trigger&quot;&gt;
+  &lt;img src=&quot;/assets/2016-11-01-hello-world/gh-pages-settings-5aa7803ec0fe022adb3f553e0af28ecbaa1517ae437bdcc7d16dbfabf9cc18f9.png&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Chalk provides a useful deploy script to build and push the site. It will deploy the builded Jekyll site to a branch named gh-pages. Don’t forget to configure the correct branch name like in the previous image. To run the deploy script:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-zsh&quot; data-lang=&quot;zsh&quot;&gt;bin/deploy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;ready&quot;&gt;Ready&lt;/h2&gt;
+
+&lt;p&gt;Now the site should be correctly deployed in the Github Pages service.&lt;/p&gt;
+
+&lt;p&gt;I hope you have found this useful.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 01 Nov 2016 00:00:00 -0300</pubDate>
+        <link>https://io.bilby91.com/posts/hello-world</link>
+        <guid isPermaLink="true">https://io.bilby91.com/posts/hello-world</guid>
+        
+        
+      </item>
+    
   </channel>
 </rss>
