@@ -25,6 +25,14 @@ styles: [agate, androidstudio, arta, asceti, atelier-cave.dark, atelier-cave.lig
 highlighter: nulls
 markdown: kramdown
 
+# Projects
+projects:
+  - blackuy/react-native-twilio-video-webrtc
+  - suttna/botbuilder-slack
+  - suttna/botbuilder-redis-storage
+  - suttna/botbuilder-markdown
+  - bilby91/sdev.sh
+
 # Important settings (change at own risk)
 assets:
   compress:
