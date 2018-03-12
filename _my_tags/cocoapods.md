@@ -1,4 +1,0 @@
----
-slug: cocoapods
-name: Cocoapods
----

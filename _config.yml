@@ -1,20 +1,28 @@
-# Mandatory settings
-baseurl: /
-name: IO
-paginate: 25
-paginate_path: "/posts/page/:num/"
-url: "http://io.bilby91.com"
-blog_theme: dark
+# Site settings
+title: bilby91
+description: Inputs and Outputs of my personal experience working with different software technologies. Enjoy it!
 
-# Optional settings
-discus_identifier: "blog-io"
-ga_analytics: "UA-86658376-1"
-rss_enabled: true
-social:
-  facebook: "https://facebook.com/bilby91"
-  github: "https://github.com/bilby91"
-  linkedin: "https://linkedin.com/in/bilby91"
-  twitter: "https://twitter.com/bilby91"
+# the subpath of your site, e.g. /blog/
+baseurl: ""
+
+# the base hostname & protocol for your site
+url: "https://io.bilby91.com"
+
+author:
+  fullname: Martín Fernández
+  github: bilby91
+  twitter: bilby91
+  disqus: blog-io
+
+google_analytics: 'UA-86658376-1'
+
+# Syntax highlighting
+highlightstyle: ''
+styles: [agate, androidstudio, arta, asceti, atelier-cave.dark, atelier-cave.light, atelier-dune.dark, atelier-dune.light, atelier-estuary.dark, atelier-estuary.light, atelier-forest.dark, atelier-forest.light, atelier-heath.dark, atelier-heath.light, atelier-lakeside.dark, atelier-lakeside.light, atelier-plateau.dark, atelier-plateau.light, atelier-savanna.dark, atelier-savanna.light, atelier-seaside.dark, atelier-seaside.light, atelier-sulphurpool.dark, atelier-sulphurpool.light, brown_paper, codepen-embed, color-brewer, dark, darkula, default, docco, far, foundation, github, github-gist, googlecode, grayscale, hopscotch, hybrid, idea, ir_black, kimbie.dark, kimbie.light, magula, mono-blue, monokai, monokai_sublime, obsidian, paraiso.dark, paraiso.light, pojoaque, railscast, rainbow, school_book, solarized_dark, solarized_light, styles_list.txt, sunburst, tomorrow, tomorrow-night-blue, tomorrow-night-bright, tomorrow-night, tomorrow-night-eightie, v, xcode, zenburn]
+
+# Build settings
+highlighter: nulls
+markdown: kramdown
 
 # Important settings (change at own risk)
 assets:
@@ -24,35 +32,14 @@ assets:
   features:
     automatic_img_size: false
   sources:
-    - _assets/bower
-    - _assets/fonts
-    - _assets/images
-    - _assets/javascripts
-    - _assets/stylesheets
-    - _vendor/
-collections:
-  my_tags:
-    output: true
-    permalink: /tag/:slug/
-defaults:
-  -
-    scope:
-      path: ""
-      type: my_tags
-    values:
-      layout: articles_by_tag
+    - assets/images
 exclude:
-  - .bowerrc
-  - .travis.yml
   - bin/*
-  - bower.json
   - circle.yml
   - Gemfile
   - Gemfile.lock
   - README.md
   - vendor/
-gems:
+plugins:
   - jekyll-assets
-  - jekyll-paginate
-  - jekyll-sitemap
 permalink: posts/:slug

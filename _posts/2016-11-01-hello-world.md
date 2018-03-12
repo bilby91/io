@@ -2,7 +2,6 @@
 layout: post
 title: "Welcome to IO!"
 description: "Find out what technologies where used to build this blog."
-tags: [blogging, jekyll, github]
 ---
 
 This is my personal blog where I write about stuff I have worked/tried in software. I thought it

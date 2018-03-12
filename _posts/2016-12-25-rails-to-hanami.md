@@ -2,7 +2,7 @@
 layout: post
 title: "Rails to Hanami"
 description: "Simple Hanami JSON API from someone with a Rails background"
-tags: [hanami, rails]
+categories: [hanami, rails]
 published: true
 ---
 

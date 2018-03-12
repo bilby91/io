@@ -1,4 +1,0 @@
----
-slug: hanami
-name: Hanami
----
