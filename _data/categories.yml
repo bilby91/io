@@ -1,0 +1,26 @@
+- slug: open-source
+  name: Open Source
+
+- slug: automation
+  name: Automation
+
+- slug: hanami
+  name: Hanami
+
+- slug: node
+  name: Node
+
+- slug: ios
+  name: iOS
+
+- slug: typescript
+  name: Typescript
+
+- slug: rails
+  name: Rails
+
+- slug: react
+  name: React
+
+- slug: react-native
+  name: React Native

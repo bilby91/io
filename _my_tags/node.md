@@ -1,4 +1,0 @@
----
-slug: node
-name: Node
----

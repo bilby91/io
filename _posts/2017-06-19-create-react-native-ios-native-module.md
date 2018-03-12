@@ -2,7 +2,7 @@
 layout: post
 title: "How to create a React Native iOS Native Module"
 description: "Learn how to create and distribute and iOS React Native Package from scratch"
-tags: [react-native, react, ios, cocoapods]
+categories: [react-native, react, ios]
 published: true
 ---
 
