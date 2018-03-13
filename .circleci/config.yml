@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  deploy:
+    working_directory: ~/io
+    docker:
+      - image: circleci/ruby:2.5-node
+    steps:
+      - checkout
+      
+      # Restore bundle cache
+      - restore_cache:
+          keys:
+            - io-bundle-{{ checksum "Gemfile.lock" }}
+            - io-bundle-
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+
+      # Store bundle cache
+      - save_cache:
+          key: io-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Run deployment script
+          command: bin/deploy
+      
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: master
